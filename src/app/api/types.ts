@@ -1,18 +1,23 @@
 type User = {
-    id: number;
-    name: string;
+    id: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    password:string;
+    password: string;
+    jobTitle: string;
+    profilePictureUrl: string;
     totalPoints: number;
-    createdAt: Date;
 }
 
 type MicroCourse = {
-    idMicroCourse: number;
     title: string;
     description: string;
-    createdAt:string;
-    creatorId: number;
+    createdAt: string;
+    authorId: string;
+  idMicroCourse Int @id @default (autoincrement())
+  category      String ?
+    videoUrl      String ?
+        pointsReward  Int @default (0)
 }
 
 type Learning = {
@@ -26,5 +31,5 @@ type Reward = {
 
 
 type RewardHistory = {
-    
+
 }

@@ -1,43 +1,47 @@
-// import { FC } from "react";
-// interface IHeaderProps { };
-
-// export const Header: FC<IHeaderProps> = (props) => {
-//     return (
-//         <div className="w-full h-[97px] bg-white">
-//             <img className="w-auto h-[85px]" src="/images/logo.png" alt="" />
-
-//             <div></div>
-//         </div>
-//     );
-// }
-
-
+import React from "react";
 import Link from "next/link";
-const Header = () => {
-    return (
-        <div className="w-full h-[97px] flex items-center bg-white- bg-green-700 flex justify-between gap-16">
-            <img src="/images/Logo.png" alt="SkillsPoints"
-                className="bg-red-700 h-[60px] w-auto" />
+import Image from "next/image";
+import Button from "./btn";
 
-            <div className=" px-[20px] flex justify-center items-center gap-16">
-                <Link
-                    href="/login"
-                    className="w-[192px] h-[43px] flex justify-center items-center rounded-xl border-2 border- px-8 py-2 font-bold text-"
-                >
-                    Log in
-                </Link>
+export const Header: React.FC = () => {
+  return (
+    <header className="w-full bg-white border-b border-slate-100 sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center group">
+          <Image
+            src="/images/logo.png"
+            alt="SkillsPoints Logo"
+            width={60}
+            height={60}
+            priority
+            className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+          />
+        </Link>
 
-                <Link
-                    href="/signup"
-                    className=" w-[192px] h-[43px] flex justify-center items-center rounded-xl border-2 border-blue-500 bg-blue-500 px-8 py-2 font-bold text-white"
-                >
-                    Sign up
-                </Link>
-            </div>
+        {/* Authentication Actions */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <Button
+            href="/signin"
+            variant="outline"
+            size="md"
+            className="min-w-[120px] sm:min-w-[140px] text-center"
+          >
+            Log in
+          </Button>
 
+          <Button
+            href="/signup"
+            variant="primary"
+            size="md"
+            className="min-w-[120px] sm:min-w-[140px] text-center"
+          >
+            Sign in
+          </Button>
         </div>
+      </div>
+    </header>
+  );
+};
 
-    );
-
-}
 export default Header;
