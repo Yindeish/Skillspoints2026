@@ -5,6 +5,6 @@
 // Update - PUT (Replace) & PATCH (Merge)
 // Delete - DELETE
 
-function POST() {
+export function POST() {
 
 }
