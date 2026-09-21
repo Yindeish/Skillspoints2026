@@ -36,7 +36,7 @@ export const Header: React.FC = () => {
             size="md"
             className="min-w-[120px] sm:min-w-[140px] text-center"
           >
-            Sign in
+            Sign up
           </Button>
         </div>
       </div>
