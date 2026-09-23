@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -25,16 +26,18 @@ model User {
 }
 
 model MicroCourse {
-  title         String
-  description   String?
-  createdAt     DateTime     @default(now())
-  authorId      Int
-  idMicroCourse Int          @id @default(autoincrement())
-  category      String?
-  videoUrl      String?
-  pointsReward  Int          @default(0)
-  User          User         @relation(fields: [authorId], references: [idUser], map: "MicroCourse_creatorId_fkey")
-  MyLearning    MyLearning[]
+  title           String
+  description     String?
+  createdAt       DateTime     @default(now())
+  authorId        Int
+  idMicroCourse   Int          @id @default(autoincrement())
+  category        String?
+  videoUrl        String?
+  pointsReward    Int          @default(0)
+  durationMinutes Int?
+  test            String?
+  User            User         @relation(fields: [authorId], references: [idUser], map: "MicroCourse_creatorId_fkey")
+  MyLearning      MyLearning[]
 
   @@index([authorId], map: "MicroCourse_creatorId_idx")
   @@index([authorId])
