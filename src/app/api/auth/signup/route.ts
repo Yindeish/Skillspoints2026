@@ -1,9 +1,11 @@
+import { NextRequest, NextResponse } from "next/server";
 
 // CRUD
 // Create - POST
 // Read - GET
 // Update - PUT (Replace) & PATCH (Merge)
 // Delete - DELETE
+
 
 // ! 3 ways of getting info from a request
 // 1. Request Body (Sensitive or Vital and are much)
@@ -18,8 +20,13 @@
 // !Where do we get them?
 // !From the request body
 // !How do we use them?
+// !Validation
 // ! We use them to create a profile  or an account for the user
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+    const body = await request.json();
 
+    console.log({ body })
+
+    return NextResponse.json('hey!')
 }
