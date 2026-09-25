@@ -135,38 +135,18 @@ export async function POST(request: NextRequest) {
     // Validate if the user already exist
 
     const strongness = 10;
+    const hash = await bcrypt.hash(password, strongness);
 
-    // const HashedPassword = bcrypt.genSalt(strongness, function (err, salt) {
-    //     return bcrypt.hash(password, salt, function (err, hash) {
-    //         return hash;
-    //     });
-    // });
-
-    bcrypt.genSalt(strongness, function (err, salt) {
-        bcrypt.hash(password, salt, async function (err, hash) {
-            await prisma.user.create({
-                data: {
-                    email,
-                    password: hash,
-                    firstName,
-                    lastName,
-                    totalPoints: 0
-                }
-            });
-        });
+    // Create the user
+    await prisma.user.create({
+        data: {
+            email,
+            password: hash,
+            firstName,
+            lastName,
+            totalPoints: 0
+        }
     });
-
-    // Create the user
-    // await prisma.user.create({
-    //     data: {
-    //         email,
-    //         password,
-    //         firstName,
-    //         lastName,
-    //         totalPoints: 0
-    //     }
-    // });
-    // Create the user
 
     // Return a success msg
     return NextResponse.json({
