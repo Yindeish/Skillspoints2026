@@ -1,4 +1,6 @@
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from 'bcrypt';
 
 // CRUD
 // Create - POST
@@ -29,16 +31,16 @@ import { NextRequest, NextResponse } from "next/server";
 // Validate the info of the user (validation like spellings, ) for the fields and their values
 // Validate if the user already exist
 // Create the user
-// Return the user for the frontend
+// Return the a success msg
 
 
 // Destructuring in Javascript
 
-const person = {
-    name: 'Rehab',
-    age: 15,
-    married: true
-};
+// const person = {
+//     name: 'Rehab',
+//     age: 15,
+//     married: true
+// };
 
 // const name = person.name;
 // const age = person.age;
@@ -50,36 +52,126 @@ const person = {
 // 
 
 
-const { age, married } = person;
+// const { age, married } = person;
+
+// email
+// Email
+// eMail
+// emAil
+// emaIl
+// emaiL
+// if (!email) {
+//     return NextResponse.json({ msg: 'No email!' })
+// }
+// if (!firstName) {
+//     return NextResponse.json({ msg: 'No first name!' })
+// }
+// if (!lastName) {
+//     return NextResponse.json({ msg: 'No last name!' })
+// }
+// if (!password) {
+//     return NextResponse.json({ msg: 'No password!' })
+// }
+
+// type A = string | number; // one-stroke OR -  it's used for comparing types alone
+// type B = boolean | null;
+
+// type C = A | B;
+
+// let name = 'Adam' || true;
+
+
+
+const greet = () => {
+    return 'I am greeting..';
+}
+
+const greeting = greet();
+
+
+const person = {
+    speak: (word: string) => {
+        return word;
+    }
+}
+
+// console.log('greeting', greeting)
+
+const word = person.speak(greeting);
+
+console.log(word, 'lloggin')
+
+
 
 export async function POST(request: NextRequest) {
     // const { email, password, } = await request.json();
     const body = await request.json();
     const { email, firstName, lastName, password } = body;
 
-    // email
-    // Email
-    // eMail
-    // emAil
-    // emaIl
-    // emaiL
-    // if (!email) {
-    //     return NextResponse.json({ msg: 'No email!' })
-    // }
-    // if (!firstName) {
-    //     return NextResponse.json({ msg: 'No first name!' })
-    // }
-    // if (!lastName) {
-    //     return NextResponse.json({ msg: 'No last name!' })
-    // }
-    // if (!password) {
-    //     return NextResponse.json({ msg: 'No password!' })
-    // }
+    // Validate the info of the user (validation like spellings, ) for the fields and their values
+    if (!email || !firstName || !lastName || !password) {
+        // two-stroke OR - is used for comapring variables or values
 
-    type A = string | number;
+        return NextResponse.json({
+            erorr: true,
+            msg: 'All fields are required!'
+        })
+    }
+    // Validate the info of the user (validation like spellings, ) for the fields and their values
 
-    if (!email || !firstName || !lastName || !password)
 
-        console.log({ email })
-    return NextResponse.json({ msg: email })
+    // Validate if the user already exist
+    const userExist = await prisma.user.findUnique({
+        where: {
+            email
+        }
+    })
+
+    if (userExist)
+        return NextResponse.json({
+            error: true,
+            msg: 'Account already exist. Proceed to login'
+        })
+    // Validate if the user already exist
+
+    const strongness = 10;
+
+    // const HashedPassword = bcrypt.genSalt(strongness, function (err, salt) {
+    //     return bcrypt.hash(password, salt, function (err, hash) {
+    //         return hash;
+    //     });
+    // });
+
+    bcrypt.genSalt(strongness, function (err, salt) {
+        bcrypt.hash(password, salt, async function (err, hash) {
+            await prisma.user.create({
+                data: {
+                    email,
+                    password: hash,
+                    firstName,
+                    lastName,
+                    totalPoints: 0
+                }
+            });
+        });
+    });
+
+    // Create the user
+    // await prisma.user.create({
+    //     data: {
+    //         email,
+    //         password,
+    //         firstName,
+    //         lastName,
+    //         totalPoints: 0
+    //     }
+    // });
+    // Create the user
+
+    // Return a success msg
+    return NextResponse.json({
+        error: false,
+        msg: 'You have successfully signed up'
+    })
+    // Return a success msg
 }
