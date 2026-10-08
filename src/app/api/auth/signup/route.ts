@@ -28,7 +28,7 @@ import bcrypt from 'bcrypt';
 
 export async function POST(request: NextRequest) {
 // Collect info from the body
-  const { email, password, firstName, lastName } =await request.json();
+  const { email, password, firstName, lastName } = await request.json();
 
 // Validate the info of the user (validation like spellings, ) for the fields and their values
   if (!email || !password || !firstName || !lastName) {
@@ -38,10 +38,11 @@ export async function POST(request: NextRequest) {
     })
   }
 
+
 // Validate if the user already exist
 const userExists = await prisma.user.findUnique({
     where:{
-        email: email
+        email
       }
 });
 
@@ -71,7 +72,7 @@ await prisma.user.create({
 
   return NextResponse.json(
     {
-      message: "successfully created user",
+      msg: "successfully created user",
     },
     {
       status: 201,

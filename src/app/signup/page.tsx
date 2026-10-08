@@ -1,6 +1,7 @@
 'use client';
 
 import { useFormik } from "formik";
+import { toast } from "sonner";
 import { object, ref, string } from "yup";
 
 
@@ -15,17 +16,33 @@ const page = () => {
       password: '',
       confirmPassword: ''
     },
-    // adam@gmail.com
     validationSchema: object({
       firstName: string().required('First name is required').min(3).max(30),
       lastName: string().required('Last Name is required').min(3).max(30),
       email: string().required('Email is required!').email().min(14).max(50),
       password: string().required('Input your password').min(6).max(15),
-      confirmPassword: string().required().oneOf(['password'], 'Passwords do not match')
+      // confirmPassword: string().required().oneOf(['password'], 'Passwords do not match')
     }),
-    onSubmit: () => { }
-  })
+    onSubmit: async (values) => {
+      const { email, firstName, lastName, password, } = values;
+      const formData = { email, firstName, lastName, password };
 
+      // connect the page to signup api
+      // fetch API
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      const msg = data?.msg;
+      toast(msg)
+    }
+  });
 
 
   return (
@@ -44,17 +61,58 @@ const page = () => {
                 placeholder: 'Input your first name',
                 type: 'text',
                 label: 'First Name',
+                value: form.values.firstName,
+                error: form.errors.firstName
               },
-            ].map((field, index) => (
-              <div className="flex flex-col gap-2" key={index}>
-                <label htmlFor={field.fieldName}>{field.label}</label>
-                <input type={field.type}
-                  id={field.fieldName}
-                  value={''}
-                  placeholder={field.placeholder}
-                  className="w-auto rounded-xl border border-gray-300 px-4 py-1 bg-[#FFFFFF]" />
-              </div>
-            ))
+              {
+                fieldName: 'lastName',
+                placeholder: 'Input your last name',
+                type: 'text',
+                label: 'Last Name',
+                value: form.values.lastName,
+                error: form.errors.lastName
+              },
+              {
+                fieldName: 'email',
+                placeholder: 'Input your email',
+                type: 'email',
+                label: 'Email Address',
+                value: form.values.email,
+                error: form.errors.email
+              },
+              {
+                fieldName: 'password',
+                placeholder: 'Input your password',
+                type: 'password',
+                label: 'Password',
+                value: form.values.password,
+                error: form.errors.password
+              },
+              {
+                fieldName: 'confirmPassword',
+                placeholder: 'Confirm your password',
+                type: 'password',
+                label: 'Confirm Password',
+                value: form.values.confirmPassword,
+                error: form.errors.confirmPassword
+              },
+            ].map((field, index) => {
+              return (
+                <div className="flex flex-col gap-2" key={index}>
+                  <label htmlFor={field.fieldName}>{field.label}</label>
+                  <input type={field.type}
+                    name={field.fieldName}
+                    // name marks the field uniquely to make sure it's the only only being update when the user types
+                    onChange={form.handleChange}
+                    // we use it to update the value of the field when the user types
+                    value={field.value}
+                    placeholder={field.placeholder}
+                    className="w-auto rounded-xl border border-gray-300 px-4 py-1 bg-[#FFFFFF]" />
+
+                  <span className="text-[10px] text-red-500">{field.error}</span>
+                </div>
+              )
+            })
           }
 
           {/* <div className="flex flex-col gap-2" key={index}>
@@ -72,7 +130,7 @@ const page = () => {
 
 
           <button
-            // onClick={() => form.handleSubmit()}
+            onClick={() => form.handleSubmit()}
             type="button" className="w-full rounded-xl bg-[#4788F9] text-white py-2 cursor-pointer" >Sign Up</button>
 
         </form>
