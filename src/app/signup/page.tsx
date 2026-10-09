@@ -27,6 +27,8 @@ const page = () => {
       const { email, firstName, lastName, password, } = values;
       const formData = { email, firstName, lastName, password };
 
+      const stringifiedData = JSON.stringify(formData);
+
       // connect the page to signup api
       // fetch API
       const response = await fetch('/api/auth/signup', {
@@ -34,7 +36,7 @@ const page = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: stringifiedData
       });
 
       const data = await response.json();
@@ -114,19 +116,6 @@ const page = () => {
               )
             })
           }
-
-          {/* <div className="flex flex-col gap-2" key={index}>
-              <label htmlFor={field.feildName}>{field.label}</label>
-              <input type={field.type}
-                id={field.feildName}
-                value={field.value}
-                onChange={form.handleChange}  
-                // name=""
-                placeholder={field.placeholder}
-                className="w-auto rounded-xl border border-gray-300 px-4 py-1 bg-[#FFFFFF]" />
-
-              <span className="text-[10px] text-red-500">{field.error}</span>
-            </div> */}
 
 
           <button
