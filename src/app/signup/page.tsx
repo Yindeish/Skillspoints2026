@@ -1,12 +1,14 @@
 'use client';
 
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { object, ref, string } from "yup";
 
 
 
 const page = () => {
+  const router = useRouter();
 
   const form = useFormik({
     initialValues: {
@@ -42,7 +44,13 @@ const page = () => {
       const data = await response.json();
 
       const msg = data?.msg;
-      toast(msg)
+      const status = data?.status;
+
+      toast(msg);
+
+      if (status === 201) {
+        router.push('/dashboard')
+      }
     }
   });
 
@@ -54,7 +62,7 @@ const page = () => {
       {/* form */}
       <section className="">
         <h1 className=" flex justify-center text-3xl font-bold pb-10">Welcome to auth</h1>
-        <form className="flex flex-col gap-8">
+        <form className="flex flex-col gap-2">
 
           {
             [

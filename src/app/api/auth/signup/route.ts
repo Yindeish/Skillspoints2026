@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt';
-
+import jwt from 'jsonwebtoken';
 
 
 
@@ -21,7 +21,9 @@ import bcrypt from 'bcrypt';
 // Collect info from the body
 // Validate the info of the user (validation like spellings, ) for the fields and their values
 // Validate if the user already exist
-// Create the user
+// Hash the password
+// Generate a token for the user.
+// Create the user and store the token and the hashed password in it (the user).
 // Return the a success msg
 
 // Create the controller function
@@ -48,23 +50,33 @@ const userExists = await prisma.user.findUnique({
 
 if (userExists) {
     return NextResponse.json({
-        msg: "user already exists",
+        msg: "Email is already taken. Proceed to login",
         status: 409
     })
 }
 
 
-
+// Hashing the password
 const strongness = 10;
 const hash = await bcrypt.hash(password, strongness);
+// Hashing the password
+
+// Generate a token for the user.
+const JWT_PASSWORD = process.env.JWT_PASSWORD;
+const token = jwt.sign(email, JWT_PASSWORD);
+// Generate a token for the user.
+
 
 await prisma.user.create({
     data:{
       email,
       firstName,
       lastName,
+      // Saving the hashed password in the user
       password: hash,
-      totalPoints: 0
+      // Saving the hashed password in the user
+      totalPoints: 0,
+      token
     }
   })
 
@@ -73,11 +85,9 @@ await prisma.user.create({
   return NextResponse.json(
     {
       msg: "successfully created user",
-    },
-    {
-      status: 201,
-    }
-  );
+      token,
+      status: 201
+    });
 }
 
   // 4. Hash the password

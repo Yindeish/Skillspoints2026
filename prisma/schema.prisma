@@ -19,6 +19,7 @@ model User {
   jobTitle          String?
   profilePicture    String?
   profilePictureUrl String?
+  token             String?
   MicroCourse       MicroCourse[]
   MyLearning        MyLearning[]
   MyRewards         MyRewards[]
