@@ -1,14 +1,14 @@
-
 // Question: 
- // what we will doing ?
- // we want to login a user
- // what we need to login ?
- // we need a user info email/pass
- //how we will get them?
- // we will get them for the body 
+// what we will doing ?
+// we want to login a user
+// what we need to login ?
+// we need a user info email/pass
+//how we will get them?
+// we will get them for the body 
 
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 
 
 //STEPS
@@ -16,50 +16,50 @@ import { NextRequest, NextResponse } from "next/server";
 //collect the info form body
 //check the info that we need to login if it is exist 
 //validation if the info  of the user existe or no
-//return the secces msg
+// Generate Token
+//return the the token and the user 
 
 
 //write the controller funcation
- export async function POST(request:NextRequest) {
-//collect the info form body
-const body = await request.json()
-//extract the user info from the body
-const {email, password} = body;
-//check the info that we need to login if it is exist 
- if (!email || !password) {
-    return NextResponse.json({
-        msg:" all fields are required",
-        status: 409
+export async function POST(request: NextRequest) {
+    //collect the info form body
+    const body = await request.json()
+    //extract the user info from the body
+    const { email, password } = body;
+    //check the info that we need to login if it is exist 
+    if (!email || !password) {
+        return NextResponse.json({
+            msg: " all fields are required",
+            status: 409
+        })
+    }
+    // check the user if it is existe
+    const userExistes = await prisma.user.findUnique({
+        where: { email }
     })
- }
-// check the user if it is existe
-const userExistes = await prisma.user.findUnique({
-   where: {email} 
-})
 
-//validation if the info  of the user existe or no
+    //validation if the info  of the user existe or no
 
-if (!userExistes) {
+    if (!userExistes) {
+        return NextResponse.json({
+            msg: "user not existe",
+            status: 400
+        })
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, userExistes.password);
+
+    if (!isPasswordCorrect) {
+        return NextResponse.json({
+            msg: "Invalid credentials",
+
+        },
+            { status: 401 })
+    }
+
     return NextResponse.json({
-        msg: "user not existe",
-        status: 400
-    })
+        msg: "Login successful",
+
+    });
+
 }
-
-
-return NextResponse.json({
-    msg:"login seccfully",
-    status: 200
-});
-    
-}
-
-
-
-
-//Body
-// URL params
-// Query params
-// !Steps
-
-
