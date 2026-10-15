@@ -14,7 +14,7 @@ const Page = () => {
         },
         validationSchema: object({
             email: string().required('Email is required!').min(8, 'Invalid email').max(30, 'Invalid email').email('Invalid email'),
-            password: string().required('Password is required!').min(8, 'INvalid password').max(15, 'Invalid password'),
+            password: string().required('Password is required!').min(6, 'INvalid password').max(15, 'Invalid password'),
         }),
         // onSubmit: (values) => {
 
