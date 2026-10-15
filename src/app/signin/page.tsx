@@ -1,8 +1,8 @@
 "use client";
 
 import { useFormik } from "formik";
+import { toast } from "sonner";
 import { object, string } from "yup";
-import bcrypt from 'bcrypt';
 
 
 const Page = () => {
@@ -10,14 +10,53 @@ const Page = () => {
     const form = useFormik({
         initialValues: {
             email: '',
-            password: ''
+            password: '',
         },
         validationSchema: object({
             email: string().required('Email is required!').min(8, 'Invalid email').max(30, 'Invalid email').email('Invalid email'),
-            password: string().required('Password is required!').min(8, 'INvalid password').max(15, 'Invalid password')
+            password: string().required('Password is required!').min(8, 'INvalid password').max(15, 'Invalid password'),
         }),
-        onSubmit: () => {
+        // onSubmit: (values) => {
 
+        //     // Connecting the page to the signin endpoint
+        //     // fetch('/api/auth/sigin', {
+        //     //     method: 'POST',
+        //     //     headers: {
+        //     //         'Content-Type': 'application/json'
+        //     //     },
+        //     //     // body: 
+        //     // })
+
+        //     // Connecting the page to the signin endpoint
+        // }
+        onSubmit: async (values) => {
+            // convert the values to json - because the endpoint only undertsands json
+            const json = JSON.stringify(values);
+            // convert the values to json - because the endpoint only undertsands json
+
+            // Connecting the page to the signin endpoint
+            // res -  result
+            const res = await fetch('/api/auth/signin', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: json
+            })
+            // Connecting the page to the signin endpoint
+
+            // clean the result and extract the data
+            const data = await res.json();
+
+            const msg = data?.msg;
+            const token = data?.token;
+            // clean the result and extract the data
+
+            console.log(token, 'token')
+
+            // display the message to the screen
+            toast(msg)
+            // display the message to the screen
         }
     });
 
@@ -42,24 +81,15 @@ const Page = () => {
         },
     ] as const;
 
+    const arr = ['name', 'email'];
+
+
     // extract properties from an object
     // dot notation which uses .
     // e.g: form.values.email
     // form.touched, form.errrors.password
 
     // square braces notation which uses []
-
-    const propertyName = 'name';
-
-    const person = {
-        name: 'Bob',
-        doc: 'docx',
-        phone: 'iphone'
-    };
-
-    console.log(person[propertyName])
-
-
 
 
     return (
@@ -72,6 +102,10 @@ const Page = () => {
                             height="200"
                         />
                     </div>
+
+                    {/* {arr.map((field) => (
+                        
+                    ))} */}
 
 
                     <form className="flex flex-col gap-3"

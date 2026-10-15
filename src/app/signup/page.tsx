@@ -134,7 +134,7 @@ const page = () => {
 
         <p className="text-center py-10">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-500  font-bold hover:underline">
+          <a href="/signin" className="text-blue-500  font-bold hover:underline">
             Log In
           </a>
         </p>

@@ -9,6 +9,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 
 //STEPS
@@ -57,9 +58,32 @@ export async function POST(request: NextRequest) {
             { status: 401 })
     }
 
+    // Generate a token for the user.
+    const JWT_PASSWORD = process.env.JWT_PASSWORD;
+    const token = jwt.sign(email, JWT_PASSWORD);
+    // Generate a token for the user.
+
+    // Save the token in the user
+    await prisma.user.update({
+        // find the user
+        where: {
+            email
+        },
+        // find the user
+
+        // update their token
+        data: {
+            token
+        }
+        // update their token
+    })
+    // Save the token in the user
+
+    // Return the token to the frontend
     return NextResponse.json({
         msg: "Login successful",
-
+        token,
     });
+    // Return the token to the frontend
 
 }
