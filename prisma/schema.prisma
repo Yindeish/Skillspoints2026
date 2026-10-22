@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL_PROD")
-  directUrl = env("DIRECT_URL_PROD")
+  url       = env("DATABASE_URL_STAGING")
+  directUrl = env("DIRECT_URL_STAGING")
 }
 
 model User {
@@ -80,4 +80,18 @@ model MyRewards {
   @@index([userId], map: "RewardHistory_userId_idx")
   @@index([rewardId])
   @@index([userId])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Token {
+  userId Int    @id
+  token  String @unique
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model OTP {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  otpCode    String
+  userEmail  String
+  expiryTime DateTime @db.Timestamptz(6)
 }
