@@ -3,6 +3,7 @@
 import { useFormik } from "formik";
 import { toast } from "sonner";
 import { object, string } from "yup";
+import Link from "next/link";
 
 
 const Page = () => {
@@ -139,6 +140,15 @@ const Page = () => {
 
                             </div>
                         ))}
+
+                        <div className="flex justify-end -mt-1 mb-1">
+                            <Link
+                                href="/forgot-password"
+                                className="text-sm font-medium text-[#4788F9] hover:text-[#3677E8] hover:underline transition"
+                            >
+                                Forgot password?
+                            </Link>
+                        </div>
 
                         <button
                             onClick={() => form.handleSubmit()}
