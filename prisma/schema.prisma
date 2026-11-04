@@ -19,7 +19,6 @@ model User {
   jobTitle          String?
   profilePicture    String?
   profilePictureUrl String?
-  token             String?
   MicroCourse       MicroCourse[]
   MyLearning        MyLearning[]
   MyRewards         MyRewards[]
@@ -90,8 +89,9 @@ model Token {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model OTP {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  otpCode    String
-  userEmail  String
-  expiryTime DateTime @db.Timestamptz(6)
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  otpCode      String
+  userEmail    String
+  expiryTime   DateTime @db.Timestamptz(6)
+  attemptCount Int      @default(0)
 }

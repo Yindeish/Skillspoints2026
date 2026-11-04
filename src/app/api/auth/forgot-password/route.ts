@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     }
   })
   // Check whether an account with that email exists.
+  console.log('accountExist', accountExist)
 
 
   // Validate the account 
@@ -55,6 +56,7 @@ export async function POST(request: NextRequest) {
   // step 1. Hash the OTP
   const strongness = 10;
   const hashedOtp = await bcrypt.hash(otp, strongness);
+
   // step 1. Hash the OTP
 
   // Step 2 -> Save the Hash
@@ -67,5 +69,7 @@ export async function POST(request: NextRequest) {
   })
   // Step 2 -> Save the Hash
   // First copy -> Hash and save it in the database
+
+
 
 }
