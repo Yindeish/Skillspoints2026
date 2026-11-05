@@ -94,4 +94,5 @@ model OTP {
   userEmail    String
   expiryTime   DateTime @db.Timestamptz(6)
   attemptCount Int      @default(0)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
 }

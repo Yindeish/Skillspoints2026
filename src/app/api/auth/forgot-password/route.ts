@@ -29,8 +29,6 @@ export async function POST(request: NextRequest) {
     }
   })
   // Check whether an account with that email exists.
-  console.log('accountExist', accountExist)
-
 
   // Validate the account 
   if (!accountExist) {
@@ -40,6 +38,15 @@ export async function POST(request: NextRequest) {
     })
   }
   // Validate the account 
+
+  const userOtps = await prisma.oTP.findMany({
+    where: {
+      userEmail: email,
+    }
+  })
+
+  const lastSentOtp = userOtps.findLast((otp) => otp.createdAt)
+
 
 
   // Generate OTP
@@ -57,12 +64,14 @@ export async function POST(request: NextRequest) {
   const strongness = 10;
   const hashedOtp = await bcrypt.hash(otp, strongness);
 
+  const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
   // step 1. Hash the OTP
 
   // Step 2 -> Save the Hash
   await prisma.oTP.create({
     data: {
-      expiryTime: '10mins',
+      expiryTime: otpExpiry,
       otpCode: hashedOtp,
       userEmail: email,
     }
