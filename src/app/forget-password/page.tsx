@@ -69,6 +69,8 @@ const ForgetPssword = () => {
                   <div key={index}>
                     <label htmlFor={field.name} className=""></label>
 
+                    {/* Custom or user-defined names */}
+
                     <input
                       type={field.type}
                       name={field.name}

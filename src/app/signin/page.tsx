@@ -6,7 +6,7 @@ import { object, string } from "yup";
 import { toast } from "sonner";
 
 const Page = () => {
-  const formLogin = useFormik({
+  const form = useFormik({
     initialValues: {
       email: "",
       password: "",
@@ -78,7 +78,7 @@ const Page = () => {
 
           <form
             className="flex flex-col gap-5"
-            onSubmit={formLogin.handleSubmit}
+            onSubmit={form.handleSubmit}
           >
             {fields.map((field, index) => (
               <div key={index}>
@@ -106,10 +106,10 @@ const Page = () => {
             ))}
             <button
               type="submit"
-              disabled={formLogin.isSubmitting}
+              disabled={form.isSubmitting}
               className="mt-2 h-12 w-full rounded-xl bg-[#4788F9] font-semibold text-white transition hover:bg-[#3677E8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4788F9]"
             >
-              {formLogin.isSubmitting ? (
+              {form.isSubmitting ? (
                 <span className="inline-flex items-center gap-2">
                   <span
                     aria-hidden="true"
