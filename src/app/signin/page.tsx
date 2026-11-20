@@ -50,7 +50,7 @@ const Page = () => {
       type: "email",
       label: "Email",
       autoComplete: "email",
-      error: formLogin.errors.email,
+      error: form.errors.email,
     },
     {
       name: "password",
@@ -58,7 +58,7 @@ const Page = () => {
       type: "password",
       label: "Password",
       autoComplete: "current-password",
-      error: formLogin.errors.password,
+      error: form.errors.password,
     },
   ];
 
@@ -94,9 +94,9 @@ const Page = () => {
                   id={field.name}
                   placeholder={field.placeholder}
                   autoComplete={field.autoComplete}
-                  value={formLogin.values[field.name]}
-                  onChange={formLogin.handleChange}
-                  onBlur={formLogin.handleBlur}
+                  value={form.values[field.name]}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   data-error={Boolean(field.error)}
                   className="h-12 w-full rounded-xl border border-[#D8DEE9] bg-white px-4 text-base text-[#071B3D] outline-none transition placeholder:text-[#56637A] focus:border-[#4788F9] focus:ring-2 focus:ring-[#E8F1FF] data-[error=true]:border-red-500"
                 />
