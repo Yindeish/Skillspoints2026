@@ -62,10 +62,10 @@ const Page = () => {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success(data.message);
+          toast.success(data?.msg);
           router.push("/signin");
         } else {
-          toast.error(data.message);
+          toast.error(data?.msg);
         }
       } catch {
         toast.error("Unable to create your account. Please try again.");

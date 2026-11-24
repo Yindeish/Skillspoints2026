@@ -30,7 +30,7 @@ const ForgetPssword = () => {
         const data = await response.json();
         if (response.ok) {
           toast.success(data.msg);
-          router.push("/verify-otp");
+          router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
         } else {
           toast.error(data.msg);
         }
