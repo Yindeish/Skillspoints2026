@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
 import { error } from "console";
 import { NextRequest, NextResponse } from "next/server";
-import { compare } from 'bcrypt';
+import bcrypt from 'bcrypt';
+import { compareExpiry } from "@/lib/utils";
 
 // Create the controller function.
 // Read the email address and OTP from the request body.
@@ -62,8 +63,64 @@ export async function POST(request: NextRequest) {
     }
   });
 
-  const unhashedOtp = compare(otpCode, userOtp.otpHashed);
-  console.log('unhashedOtp', unhashedOtp);
+  if (!userOtp) {
+    return NextResponse.json({
+      error: true,
+      msg: 'No OTP found!'
+    }, { status: 404 })
+  }
+  // Find the OTP that’s related to the user for their password reset request.
+
+  // Check that the OTP if it is correct
+  const otpIsCorrect = await bcrypt.compare(otpCode, userOtp?.otpHashed);
+
+  if (!otpIsCorrect) {
+    if (Number(userOtp?.attemptCount) == 3) {
+      return NextResponse.json({ error: true, msg: 'Maximum trials reached. Try again later' }, { status: 400 })
+    }
+
+    const newAttemptCount = Number(userOtp?.attemptCount) + 1;
+
+    const updatesUserOtp = await prisma.otp.update({
+      where: {
+        otpHashed: userOtp?.otpHashed,
+        email
+      },
+      data: {
+        attemptCount: newAttemptCount
+      }
+    })
+
+    console.log('updatesUserOtp', updatesUserOtp)
+
+    return NextResponse.json({
+      error: true,
+      msg: 'Wrong OTP!'
+    }, { status: 400 })
+  }
+  // Check that the OTP if it is correct
+
+  // Check that the OTP if it has not expired,
+  const otpExpired = compareExpiry(userOtp?.createdAt, userOtp?.expiresAt)?.isExpired;
+
+  if (otpExpired)
+    return NextResponse.json({
+      error: true,
+      msg: 'OTP has expired!'
+    }, { status: 400 })
+  // Check that the OTP if it has not expired,
+
+  // Check that the OTP if it not already been used
+  const otpUsedBefore = Number(userOtp?.attemptCount) > 0;
+
+  if (otpUsedBefore)
+    return NextResponse.json({ error: true, msg: 'OTP has been used before!' }, { status: 400 })
+  // Check that the OTP if it not already been used
+
+  // Limit failed verification attempts to like 3.
+
+  // Limit failed verification attempts to like 3.
+
 
   // if (!userOtp) {
   //   return NextResponse.json({
@@ -71,7 +128,6 @@ export async function POST(request: NextRequest) {
   //     msg: ''
   //   })
   // }
-  // Find the OTP that’s related to the user for their password reset request.
 
 
 
