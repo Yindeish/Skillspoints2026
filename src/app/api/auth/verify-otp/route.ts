@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
   const otpIsCorrect = await bcrypt.compare(otpCode, userOtp?.otpHashed);
 
   if (!otpIsCorrect) {
-    if (Number(userOtp?.attemptCount) == 3) {
+    if (Number(userOtp?.attemptCount) >= 3) {
       return NextResponse.json({ error: true, msg: 'Maximum trials reached. Try again later' }, { status: 400 })
     }
 
